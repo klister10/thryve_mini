@@ -64,6 +64,8 @@ function ConfettiParticle({ progress, config }) {
         styles.particle,
         style,
         {
+          top: -(config.isSquare ? config.size : config.size * 0.42) / 2,
+          left: -config.size / 2,
           width: config.size,
           height: config.isSquare ? config.size : config.size * 0.42,
           borderRadius: config.isSquare ? 2 : config.size,
@@ -98,10 +100,13 @@ export default function ConfettiBurst({ trigger }) {
 }
 
 const styles = StyleSheet.create({
+  // Zero-size anchor at the parent's center; particles offset themselves from it.
   overlay: {
-    ...StyleSheet.absoluteFill,
-    alignItems: 'center',
-    justifyContent: 'center',
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    width: 0,
+    height: 0,
   },
   particle: {
     position: 'absolute',

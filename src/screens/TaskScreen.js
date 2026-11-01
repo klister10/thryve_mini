@@ -1,11 +1,12 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { IconButton, Button } from 'react-native-paper';
+import { IconButton } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 
+import PrimaryButton from '../components/PrimaryButton';
 import { colors } from '../theme';
 
 export default function TaskScreen({ task, isComplete, onClose, onComplete }) {
@@ -29,7 +30,7 @@ export default function TaskScreen({ task, isComplete, onClose, onComplete }) {
             <MaterialCommunityIcons
               name="spa-outline"
               size={22}
-              color={isComplete ? colors.success : colors.coral}
+              color={isComplete ? colors.text : colors.accentText}
             />
             <Text style={[styles.badgeText, isComplete && styles.badgeTextComplete]}>
               Today's task
@@ -50,17 +51,7 @@ export default function TaskScreen({ task, isComplete, onClose, onComplete }) {
             <Text style={styles.doneText}>Completed today — see you tomorrow!</Text>
           </View>
         ) : (
-          <Button
-            mode="contained"
-            onPress={handleComplete}
-            buttonColor={colors.coral}
-            textColor="#FFFFFF"
-            contentStyle={styles.buttonContent}
-            style={styles.button}
-            labelStyle={styles.buttonLabel}
-          >
-            Mark as Done
-          </Button>
+          <PrimaryButton label="Mark as Done" onPress={handleComplete} />
         )}
       </View>
     </SafeAreaView>
@@ -86,7 +77,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'flex-start',
-    backgroundColor: colors.coralSoft,
+    backgroundColor: colors.accentSoft,
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 999,
@@ -96,13 +87,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.successSoft,
   },
   badgeTextComplete: {
-    color: colors.success,
+    color: colors.text,
   },
   badgeText: {
     marginLeft: 6,
     fontSize: 13,
     fontWeight: '700',
-    color: colors.coral,
+    color: colors.accentText,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
@@ -122,16 +113,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingBottom: 12,
     paddingTop: 8,
-  },
-  button: {
-    borderRadius: 999,
-  },
-  buttonContent: {
-    height: 56,
-  },
-  buttonLabel: {
-    fontSize: 17,
-    fontWeight: '700',
   },
   doneRow: {
     flexDirection: 'row',

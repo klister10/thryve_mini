@@ -17,7 +17,7 @@ export default {
     },
     android: {
       adaptiveIcon: {
-        backgroundColor: '#FFF7EE',
+        backgroundColor: '#034732',
         foregroundImage: './assets/android-icon-foreground.png',
       },
       package: IS_DEV ? 'com.kathleenlister.thryvemini.dev' : 'com.kathleenlister.thryvemini',
@@ -31,7 +31,7 @@ export default {
         'expo-notifications',
         {
           icon: './assets/icon.png',
-          color: '#FF6F59',
+          color: '#D16014',
         },
       ],
     ],

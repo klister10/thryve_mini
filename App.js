@@ -47,7 +47,8 @@ const closeToCenter = () => {
 };
 
 export default function App() {
-  const [isComplete, setIsComplete] = useState(false);
+  // null until storage is read, so the card never animates a state it already had.
+  const [isComplete, setIsComplete] = useState(null);
   const [screen, setScreen] = useState('dashboard');
   const [celebrateKey, setCelebrateKey] = useState(0);
   const todayTask = getTodayTask();
@@ -82,12 +83,14 @@ export default function App() {
         >
           <StatusBar style="dark" />
           <View style={styles.root}>
-            <DashboardScreen
-              isComplete={isComplete}
-              onOpenTask={handleOpenTask}
-              confettiTrigger={celebrateKey}
-              onReset={__DEV__ ? handleReset : undefined}
-            />
+            {isComplete !== null && (
+              <DashboardScreen
+                isComplete={isComplete}
+                onOpenTask={handleOpenTask}
+                confettiTrigger={celebrateKey}
+                onReset={__DEV__ ? handleReset : undefined}
+              />
+            )}
             {screen === 'task' && (
               <Animated.View
                 entering={openFromCenter}
@@ -96,7 +99,7 @@ export default function App() {
               >
                 <TaskScreen
                   task={todayTask}
-                  isComplete={isComplete}
+                  isComplete={!!isComplete}
                   onClose={handleCloseTask}
                   onComplete={handleCompleteTask}
                 />

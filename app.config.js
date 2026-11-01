@@ -35,7 +35,10 @@ export default {
         },
       ],
     ],
-    // Run `eas init` when you're ready to build, then add the projectId here
-    // and under extra.eas.projectId (see kathleen-app-prototype skill).
+    extra: {
+      eas: {
+        projectId: '1db56093-6bfb-46cb-8266-cda7a5a7c2e2',
+      },
+    },
   },
 };

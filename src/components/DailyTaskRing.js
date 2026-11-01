@@ -37,16 +37,19 @@ export default function DailyTaskRing({ isComplete, onPress }) {
       pulse.value = withTiming(0, { duration: 200 });
       progress.value = 0;
       progress.value = withTiming(1, {
-        duration: 750,
+        duration: 420,
         easing: Easing.out(Easing.cubic),
       });
-      bounce.value = withSequence(
-        withDelay(150, withSpring(1.14, { damping: 6, stiffness: 220 })),
-        withSpring(1, { damping: 7, stiffness: 200 })
-      );
       checkScale.value = withDelay(
-        420,
-        withSpring(1, { damping: 7, stiffness: 260 })
+        240,
+        withTiming(1, { duration: 280, easing: Easing.out(Easing.cubic) })
+      );
+      bounce.value = withDelay(
+        320,
+        withSequence(
+          withTiming(1.05, { duration: 130, easing: Easing.out(Easing.quad) }),
+          withTiming(1, { duration: 200, easing: Easing.inOut(Easing.quad) })
+        )
       );
     } else {
       progress.value = withTiming(0, { duration: 250 });
@@ -83,7 +86,7 @@ export default function DailyTaskRing({ isComplete, onPress }) {
   }));
 
   const badgeStyle = useAnimatedStyle(() => ({
-    opacity: checkScale.value,
+    opacity: Math.min(1, checkScale.value * 4),
     transform: [{ scale: checkScale.value }],
   }));
 
@@ -145,11 +148,11 @@ export default function DailyTaskRing({ isComplete, onPress }) {
         </Svg>
         <View style={styles.center} pointerEvents="none">
           <Animated.View style={[styles.badge, badgeStyle]}>
-            <MaterialCommunityIcons name="check-bold" size={72} color="#FFFFFF" />
+            <MaterialCommunityIcons name="check-bold" size={104} color="#FFFFFF" />
           </Animated.View>
           <Animated.View style={plusStyle}>
             <MaterialCommunityIcons
-              name="hand-heart-outline"
+              name="spa-outline"
               size={72}
               color={colors.coral}
             />
@@ -169,21 +172,26 @@ const styles = StyleSheet.create({
   },
   glow: {
     position: 'absolute',
+    top: 0,
+    left: 0,
     width: SIZE,
     height: SIZE,
     borderRadius: SIZE / 2,
   },
   center: {
-    position: 'absolute',
+    ...StyleSheet.absoluteFill,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  // Same diameter as the ring's outer edge, so the finished state is one solid circle.
   badge: {
     position: 'absolute',
-    width: SIZE - STROKE_WIDTH * 3,
-    height: SIZE - STROKE_WIDTH * 3,
-    borderRadius: (SIZE - STROKE_WIDTH * 3) / 2,
-    backgroundColor: '#2FC69A',
+    top: 0,
+    left: 0,
+    width: SIZE,
+    height: SIZE,
+    borderRadius: SIZE / 2,
+    backgroundColor: colors.success,
     alignItems: 'center',
     justifyContent: 'center',
   },

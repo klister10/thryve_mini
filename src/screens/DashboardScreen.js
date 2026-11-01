@@ -7,7 +7,7 @@ import DailyTaskRing from '../components/DailyTaskRing';
 import ConfettiBurst from '../components/ConfettiBurst';
 import { colors } from '../theme';
 
-export default function DashboardScreen({ isComplete, onOpenTask, confettiTrigger }) {
+export default function DashboardScreen({ isComplete, onOpenTask, confettiTrigger, onReset }) {
   return (
     <SafeAreaView style={styles.root} edges={['top', 'bottom']}>
       <View style={styles.header}>
@@ -22,7 +22,9 @@ export default function DashboardScreen({ isComplete, onOpenTask, confettiTrigge
 
       <View style={styles.body}>
         <DailyTaskRing isComplete={isComplete} onPress={onOpenTask} />
-        <Text style={styles.ringLabel}>Daily Task</Text>
+        <Text style={styles.ringLabel} onLongPress={onReset}>
+          Daily Task
+        </Text>
         <Text style={styles.ringHint}>
           {isComplete ? 'All done for today. Nice work! 🎉' : 'Tap to see today’s task'}
         </Text>

@@ -32,3 +32,8 @@ export async function getIsTodayComplete(date = new Date()) {
 export async function markTodayComplete(date = new Date()) {
   await AsyncStorage.setItem(LAST_COMPLETED_KEY, todayKey(date));
 }
+
+// Dev-only: lets you re-run today's completion while testing.
+export async function resetToday() {
+  await AsyncStorage.removeItem(LAST_COMPLETED_KEY);
+}

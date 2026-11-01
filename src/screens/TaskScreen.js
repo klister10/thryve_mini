@@ -25,9 +25,15 @@ export default function TaskScreen({ task, isComplete, onClose, onComplete }) {
         showsVerticalScrollIndicator={false}
       >
         <Animated.View entering={FadeInDown.duration(380).springify()}>
-          <View style={styles.badge}>
-            <MaterialCommunityIcons name="hand-heart-outline" size={22} color={colors.coral} />
-            <Text style={styles.badgeText}>Today's task</Text>
+          <View style={[styles.badge, isComplete && styles.badgeComplete]}>
+            <MaterialCommunityIcons
+              name="spa-outline"
+              size={22}
+              color={isComplete ? colors.success : colors.coral}
+            />
+            <Text style={[styles.badgeText, isComplete && styles.badgeTextComplete]}>
+              Today's task
+            </Text>
           </View>
           <Text style={styles.title}>{task.title}</Text>
         </Animated.View>
@@ -85,6 +91,12 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 999,
     marginBottom: 16,
+  },
+  badgeComplete: {
+    backgroundColor: colors.successSoft,
+  },
+  badgeTextComplete: {
+    color: colors.success,
   },
   badgeText: {
     marginLeft: 6,

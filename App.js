@@ -5,13 +5,46 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { PaperProvider } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
-import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated';
+import Animated, { Easing, withTiming } from 'react-native-reanimated';
 
 import DashboardScreen from './src/screens/DashboardScreen';
 import TaskScreen from './src/screens/TaskScreen';
-import { getIsTodayComplete, getTodayTask, markTodayComplete } from './src/utils/dailyTask';
+import * as Haptics from 'expo-haptics';
+import {
+  getIsTodayComplete,
+  getTodayTask,
+  markTodayComplete,
+  resetToday,
+} from './src/utils/dailyTask';
 import { setupDailyReminder } from './src/notifications';
 import { paperTheme, colors } from './src/theme';
+
+// Task sheet grows out of the center of the screen and shrinks back into it.
+const openFromCenter = () => {
+  'worklet';
+  return {
+    initialValues: { opacity: 0, transform: [{ scale: 0.85 }] },
+    animations: {
+      opacity: withTiming(1, { duration: 260, easing: Easing.out(Easing.quad) }),
+      transform: [
+        { scale: withTiming(1, { duration: 360, easing: Easing.out(Easing.cubic) }) },
+      ],
+    },
+  };
+};
+
+const closeToCenter = () => {
+  'worklet';
+  return {
+    initialValues: { opacity: 1, transform: [{ scale: 1 }] },
+    animations: {
+      opacity: withTiming(0, { duration: 200, easing: Easing.in(Easing.quad) }),
+      transform: [
+        { scale: withTiming(0.92, { duration: 220, easing: Easing.in(Easing.cubic) }) },
+      ],
+    },
+  };
+};
 
 export default function App() {
   const [isComplete, setIsComplete] = useState(false);
@@ -34,6 +67,12 @@ export default function App() {
     setScreen('dashboard');
   }, []);
 
+  const handleReset = useCallback(async () => {
+    await resetToday();
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    setIsComplete(false);
+  }, []);
+
   return (
     <GestureHandlerRootView style={styles.flex}>
       <SafeAreaProvider>
@@ -47,11 +86,12 @@ export default function App() {
               isComplete={isComplete}
               onOpenTask={handleOpenTask}
               confettiTrigger={celebrateKey}
+              onReset={__DEV__ ? handleReset : undefined}
             />
             {screen === 'task' && (
               <Animated.View
-                entering={SlideInDown.springify().damping(18).mass(0.7)}
-                exiting={SlideOutDown.duration(260)}
+                entering={openFromCenter}
+                exiting={closeToCenter}
                 style={StyleSheet.absoluteFill}
               >
                 <TaskScreen

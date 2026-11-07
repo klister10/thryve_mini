@@ -9,6 +9,7 @@ import Animated, { Easing, withTiming } from 'react-native-reanimated';
 
 import DashboardScreen from './src/screens/DashboardScreen';
 import TaskScreen from './src/screens/TaskScreen';
+import LonelinessQuizScreen from './src/screens/LonelinessQuizScreen';
 import * as Haptics from 'expo-haptics';
 import {
   getIsTodayComplete,
@@ -60,6 +61,8 @@ export default function App() {
 
   const handleOpenTask = useCallback(() => setScreen('task'), []);
   const handleCloseTask = useCallback(() => setScreen('dashboard'), []);
+  const handleOpenQuiz = useCallback(() => setScreen('quiz'), []);
+  const handleCloseQuiz = useCallback(() => setScreen('dashboard'), []);
 
   const handleCompleteTask = useCallback(async () => {
     await markTodayComplete();
@@ -87,6 +90,7 @@ export default function App() {
               <DashboardScreen
                 isComplete={isComplete}
                 onOpenTask={handleOpenTask}
+                onOpenQuiz={handleOpenQuiz}
                 confettiTrigger={celebrateKey}
                 onReset={__DEV__ ? handleReset : undefined}
               />
@@ -103,6 +107,15 @@ export default function App() {
                   onClose={handleCloseTask}
                   onComplete={handleCompleteTask}
                 />
+              </Animated.View>
+            )}
+            {screen === 'quiz' && (
+              <Animated.View
+                entering={openFromCenter}
+                exiting={closeToCenter}
+                style={StyleSheet.absoluteFill}
+              >
+                <LonelinessQuizScreen onClose={handleCloseQuiz} />
               </Animated.View>
             )}
           </View>

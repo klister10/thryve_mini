@@ -1,23 +1,47 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import DailyTaskCard from '../components/DailyTaskCard';
+import LonelinessQuizCard from '../components/LonelinessQuizCard';
 import { colors } from '../theme';
 
-export default function DashboardScreen({ isComplete, onOpenTask, confettiTrigger, onReset }) {
+// Header row height plus breathing room, below the top safe-area inset.
+const HEADER_HEIGHT = 80;
+
+export default function DashboardScreen({
+  isComplete,
+  onOpenTask,
+  onOpenQuiz,
+  confettiTrigger,
+  onReset,
+}) {
+  const insets = useSafeAreaInsets();
+  // Same padding top and bottom keeps the cards centered in the whole viewport,
+  // while still clearing the header overlay when the screen is short and scrolls.
+  const edgePadding = insets.top + HEADER_HEIGHT;
+
   return (
     <View style={styles.root}>
-      {/* Fills the whole screen, so the card is centered on the screen, not the space under the header. */}
-      <View style={styles.body} pointerEvents="box-none">
+      <ScrollView
+        style={StyleSheet.absoluteFill}
+        contentContainerStyle={[
+          styles.body,
+          { paddingTop: edgePadding, paddingBottom: edgePadding },
+        ]}
+        showsVerticalScrollIndicator={false}
+      >
         <DailyTaskCard
           isComplete={isComplete}
           onPress={onOpenTask}
           onLongPress={onReset}
           confettiTrigger={confettiTrigger}
         />
-      </View>
+        <View style={styles.quizWrap}>
+          <LonelinessQuizCard onPress={onOpenQuiz} />
+        </View>
+      </ScrollView>
 
       <SafeAreaView edges={['top']} pointerEvents="box-none">
         <View style={styles.header}>
@@ -68,8 +92,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   body: {
-    ...StyleSheet.absoluteFill,
+    flexGrow: 1,
     justifyContent: 'center',
     paddingHorizontal: 24,
+  },
+  quizWrap: {
+    marginTop: 16,
   },
 });
